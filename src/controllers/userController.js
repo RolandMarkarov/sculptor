@@ -1,5 +1,13 @@
 const User = require('../models/userModel');
-
+const jwt = require('jsonwebtoken');
+const token = jwt.sign(
+	{
+		data: 'foobar'
+	},
+	'secret',
+	{ expiresIn: 100 }
+);
+console.log(token);
 module.exports.newUser = (req, res) => {
 	const data = {
 		email: req.body.email,
@@ -28,20 +36,21 @@ module.exports.newUser = (req, res) => {
 };
 
 module.exports.logIn = async (req, res) => {
-	const email = req.body.email;
+  const email = req.body.email;
 	const user = await User.findOne({ email }).lean();
-	console.log(user);
+    const token = jwt.sign(user, "secret",{
+      expiresIn: "1h"})
 
 	User.findOne({ email }, (err, user) => {
 		if (err) {
 			res.status(400).json({
-				message: err.message
+				message: err.message,
 			});
 		}
 		res.json({
 			user: {
 				id: user._id,
-				token: 'tokenforloginjfjfjfjf'
+				token,
 			},
 			success: true,
 			message: 'user successfully logined'

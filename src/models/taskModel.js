@@ -3,10 +3,12 @@ const Schema = mongoose.Schema;
 
 const TaskSchema = new Schema({
 	taskTitle: {
-		type: String
+    type: String,
+    required: true
 	},
 	taskWeekRange: {
-		type: Number
+    type: Number,
+    required: true
 	},
 	taskStart: {
 		type: Date
